@@ -9,7 +9,7 @@ type State = {
 };
 // type Props = Record<string, never>;
 type Props = {}
-const res: any = 5
+const res: any = 34
 
 export default class App extends React.Component<Props, State> {
   state: State = {
@@ -38,7 +38,7 @@ export default class App extends React.Component<Props, State> {
               onClick={this.throwError}
               className="bg-red-500 text-white px-4 py-2 rounded"
             >
-              Throw Error
+              Throw Error.
             </button>
           </div>
           <CardList search={this.state.searchTerm} />
