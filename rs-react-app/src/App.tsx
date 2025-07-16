@@ -7,10 +7,11 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 type State = {
   searchTerm: string;
 };
+type Props = Record<string, never>;
 
-export default class App extends React.Component<{}, State> {
+export default class App extends React.Component<Props, State> {
   state: State = {
-    searchTerm: localStorage.getItem('searchTerm') || '',
+    searchTerm: localStorage.getItem("searchTerm") || '',
   };
 
   setSearchTerm = (term: string) => {

@@ -1,1 +1,3 @@
-npm test
+npm run lint
+
+echo "Running pre-commit hook..."
