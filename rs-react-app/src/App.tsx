@@ -7,7 +7,8 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 type State = {
   searchTerm: string;
 };
-type Props = Record<string, never>;
+// type Props = Record<string, never>;
+type Props = {}
 
 export default class App extends React.Component<Props, State> {
   state: State = {
