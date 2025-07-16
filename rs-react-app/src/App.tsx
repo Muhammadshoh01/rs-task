@@ -9,7 +9,7 @@ type State = {
 };
 // type Props = Record<string, never>;
 type Props = {}
-const res: any = ''
+const res: any = 5
 
 export default class App extends React.Component<Props, State> {
   state: State = {
