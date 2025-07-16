@@ -8,7 +8,7 @@ type State = {
   shouldThrow: boolean;
 };
 type Props = Record<string, never>;
-const res: any = '';
+const res: any = 34;
 
 export default class App extends React.Component<Props, State> {
   state: State = {
