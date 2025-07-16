@@ -11,7 +11,7 @@ type Props = Record<string, never>;
 const res: any = 34;
 
 export default class App extends React.Component<Props, State> {
-  state: = {
+  state: State = {
     searchTerm: localStorage.getItem('searchTerm') || '',
     shouldThrow: false,
   };
