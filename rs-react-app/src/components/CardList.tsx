@@ -52,7 +52,8 @@ export class CardList extends React.Component<Props, State> {
         this.setState({ pokemons, loading: false });
       }
     } catch (err: unknown) {
-      if (err instanceof Error) this.setState({ error: err.message, loading: false });
+      if (err instanceof Error)
+        this.setState({ error: err.message, loading: false });
     }
   };
 
