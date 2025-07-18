@@ -76,7 +76,7 @@ export class CardList extends React.Component<Props, State> {
           ))}
         </div>
         {!this.props.search && (
-          <div className="flex justify-center gap-4 mt-6">
+          <div className="flex justify-center items-center gap-4 mt-6">
             <button
               onClick={this.prev}
               className="px-4 py-2 bg-gray-400 rounded"
