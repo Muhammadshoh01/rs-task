@@ -69,7 +69,7 @@ export class CardList extends React.Component<Props, State> {
       return <div className="text-red-500 text-center p-4">Error: {error}</div>;
 
     return (
-      <div className="p-4">
+      <div data-testid="card-list" className="p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {pokemons.map((p) => (
             <Card key={p.name} pokemon={p} />

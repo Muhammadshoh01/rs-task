@@ -26,7 +26,7 @@ export class SearchBar extends React.Component<Props, State> {
 
   render() {
     return (
-      <div className="flex justify-center gap-2 p-4">
+      <div data-testid="search-input" className="flex justify-center gap-2 p-4">
         <input
           className="border px-4 py-2 rounded"
           value={this.state.input}
