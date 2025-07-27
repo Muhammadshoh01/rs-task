@@ -1,23 +1,29 @@
-// src/router/routes.tsx
+
 import App from '../App';
 // import { appLoader } from './loaders';
-import { ErrorBoundary } from '../components/ErrorBoundary';
+import About from '../components/About';
+import Layout from '../components/Layout';
+import ErrorPage from '../components/404';
 
 export const routes = [
     {
         path: '/',
-        element: <App />,
+        element: <Layout />,
         // loader: appLoader,
-        // errorElement: <ErrorBoundary />,
+        errorElement: <ErrorPage />,
         children: [
-            // {
-            //     index: true,
-            //     element: <Home />
-            // },
-            // {
-            //     path: 'about',
-            //     element: <About />
-            // }
+            {
+                index: true,
+                element: <App />
+            },
+            {
+                path: 'about',
+                element: <About />
+            },
+            {
+                path: '*',
+                element: <ErrorPage />
+            }
         ]
     }
 ];

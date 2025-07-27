@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Card } from './Card';
 import type { Pokemon } from '../types';
 import { fetchPokemonByName, fetchPokemonList } from '../api';
+import { useSearchParams } from 'react-router-dom';
+
 
 const LIMIT = 10;
 
@@ -14,7 +16,9 @@ export function CardList({ search }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [pokemons, setPokemons] = useState<Pokemon[]>([])
-  const [offset, setOffset] = useState<number>(0)
+  // const [offset, setOffset] = useState<number>(0)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const offset = parseInt(searchParams.get("offset") || "0", 10);
 
   useEffect(() => {
     async function loadData() {
@@ -46,10 +50,10 @@ export function CardList({ search }: Props) {
   }, [search, offset])
 
   function next() {
-    setOffset((prevOffset) => prevOffset + LIMIT)
+    setSearchParams({ offset: String(offset + LIMIT), search });
   }
   function prev() {
-    setOffset((prevOffset) => Math.max(prevOffset - LIMIT, 0))
+    setSearchParams({ offset: String(Math.max(offset - LIMIT, 0)), search });
   }
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
