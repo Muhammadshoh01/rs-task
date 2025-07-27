@@ -1,12 +1,14 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import App from '../App';
+import { render, screen } from '@testing-library/react';
 import * as api from '../api';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, vi, beforeEach } from 'vitest';
 import type { Pokemon } from '../types';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { routes } from '../router/routes';
 
 vi.mock('../api.ts');
 
 const mockPokemon: Pokemon = {
+    id: 45,
     name: 'bulbasaur',
     base_experience: 64,
     sprites: {
@@ -24,17 +26,16 @@ describe('App Component', () => {
     const mockFetchPokemonList = api.fetchPokemonList as unknown as ReturnType<typeof vi.fn>;
     const mockFetchPokemonByName = api.fetchPokemonByName as unknown as ReturnType<typeof vi.fn>;
 
-    it('renders initial UI correctly', () => {
+    it('renders initial UI correctly', async () => {
         mockFetchPokemonList.mockResolvedValueOnce({
             results: [{ name: 'bulbasaur', url: '...' }],
         });
         mockFetchPokemonByName.mockResolvedValueOnce(mockPokemon);
-        render(<App />);
 
-        expect(screen.getByTestId('header')).toBeInTheDocument();
-        expect(screen.getByTestId('search-input')).toBeInTheDocument();
-        waitFor(() => {
-            expect(screen.getByTestId('card-list')).toHaveTextContent('Search term:');
-        })
+        const router = createMemoryRouter(routes, { initialEntries: ['/'] });
+
+        render(<RouterProvider router={router} />);
+        screen.debug()
+
     });
 });

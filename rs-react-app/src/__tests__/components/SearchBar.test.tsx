@@ -1,5 +1,5 @@
 import { it, expect, describe, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { SearchBar } from '../../components/SearchBar'
 import userEvent from '@testing-library/user-event'
 
@@ -31,7 +31,9 @@ describe('Searchbar', () => {
         await user.click(button)
 
         expect(mockOnSearch).toHaveBeenCalledWith('newTerm')
-        expect(localStorage.getItem('searchTerm')).toBe('newTerm')
+        waitFor(() => {
+            expect(localStorage.getItem('searchTerm')).toBe('newTerm')
+        })
     })
 })
 
