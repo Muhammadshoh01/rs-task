@@ -9,14 +9,14 @@ const LIMIT = 10;
 
 type Props = {
   search: string;
+  onCardClick?: (id: number) => void;
 };
 
-export function CardList({ search }: Props) {
+export function CardList({ search, onCardClick }: Props) {
 
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [pokemons, setPokemons] = useState<Pokemon[]>([])
-  // const [offset, setOffset] = useState<number>(0)
   const [searchParams, setSearchParams] = useSearchParams();
   const offset = parseInt(searchParams.get("offset") || "0", 10);
 
@@ -63,7 +63,9 @@ export function CardList({ search }: Props) {
     <div data-testid="card-list" className="p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {pokemons.map((p) => (
-          <Card key={p.name} pokemon={p} />
+          <div onClick={() => onCardClick?.(p.id)} key={p.name}>
+            <Card pokemon={p} />
+          </div>
         ))}
       </div>
       {!search && (

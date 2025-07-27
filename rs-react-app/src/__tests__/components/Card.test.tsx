@@ -5,6 +5,7 @@ import { Card } from '../../components/Card'
 
 
 const testPokemon: Pokemon = {
+    id: 45,
     name: 'bulbasaur',
     base_experience: 64,
     sprites: { front_default: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" }

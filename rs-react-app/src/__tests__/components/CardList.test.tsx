@@ -5,10 +5,12 @@ import { CardList } from '../../components/CardList';
 import * as api from '../../api';
 import type { Pokemon, PokemonListResponse } from '../../types';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('../../api.ts');
 
 const mockPokemon: Pokemon = {
+    id: 45,
     name: 'bulbasaur',
     base_experience: 64,
     sprites: {
@@ -27,14 +29,14 @@ describe('CardList', () => {
     it('renders loading state', async () => {
         mockFetchPokemonList.mockImplementation(() => new Promise(() => { }));
 
-        render(<CardList search="" />);
+        render(<MemoryRouter><CardList search="" /></MemoryRouter>);
         expect(screen.getByText(/loading/i)).toBeInTheDocument();
     });
 
     it('renders a single searched Pokémon', async () => {
         mockFetchPokemonByName.mockResolvedValueOnce(mockPokemon);
 
-        render(<CardList search="bulbasaur" />);
+        render(<MemoryRouter><CardList search="bulbasaur" /></MemoryRouter>);
 
         await waitFor(() => {
             expect(screen.getByTestId('pokemon-card')).toBeInTheDocument();
@@ -63,7 +65,7 @@ describe('CardList', () => {
             })
         );
 
-        render(<CardList search="" />);
+        render(<MemoryRouter><CardList search="" /></MemoryRouter>);
 
         await waitFor(() => {
             expect(screen.getByText(/bulbasaur/i)).toBeInTheDocument();
@@ -76,7 +78,7 @@ describe('CardList', () => {
     it('displays error on failed search', async () => {
         mockFetchPokemonByName.mockRejectedValueOnce(new Error('Pokemon not found: 404'));
 
-        render(<CardList search="sukuna" />);
+        render(<MemoryRouter><CardList search="sukuna" /></MemoryRouter>);
 
         await waitFor(() => {
             screen.debug()
@@ -94,7 +96,7 @@ describe('CardList', () => {
         mockFetchPokemonList.mockResolvedValue(mockList);
         mockFetchPokemonByName.mockResolvedValue(mockPokemon);
 
-        render(<CardList search="" />);
+        render(<MemoryRouter><CardList search="" /></MemoryRouter>);
         await waitFor(() => screen.getByText(/bulbasaur/i));
 
         const nextBtn = screen.getByText(/next/i);

@@ -5,25 +5,40 @@ import { SearchBar } from './components/SearchBar';
 import { CardList } from './components/CardList';
 import { Link } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
+import { PokemonDetails } from './components/PokemonDetails';
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useSearchTerm()
   const [shouldThrow, setShouldThrow] = useState<boolean>(false)
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const urlSearch = searchParams.get('search') || '';
 
-  // 👉 On load: if localStorage has value but URL doesn't — sync it
+  const urlSearch = searchParams.get('search') || '';
+  const detailsId = searchParams.get('detailsId');
+
   useEffect(() => {
-    if (searchTerm && !searchParams.get('search')) {
-      setSearchParams({ search: searchTerm, offset: '0' });
+    if (searchTerm && !urlSearch) {
+      setSearchParams({ search: searchTerm });
     }
-  }, []);
+  }, [searchTerm, urlSearch, setSearchParams]);
 
   function handleSearch(term: string) {
-    setSearchTerm(term); // localStorage
-    setSearchParams({ search: term, offset: '0' }); // URL
+    setSearchTerm(term);
+    setSearchParams({ search: term });
   }
+  const handleCardClick = (id: number) => {
+    setSearchParams(prev => {
+      prev.set('search', urlSearch);
+      prev.set('detailsId', String(id));
+      return prev;
+    });
+  };
+  const closeDetails = () => {
+    setSearchParams(prev => {
+      prev.delete('detailsId');
+      return prev;
+    });
+  };
 
   function throwError() {
     setShouldThrow(true)
@@ -49,7 +64,16 @@ export default function App() {
           About page
         </Link>
       </div>
-      <CardList search={searchTerm} />
+      <div className="flex">
+        <div className="w-full md:w-1/2 p-4">
+          <CardList onCardClick={handleCardClick} search={searchTerm} />
+        </div>
+        {detailsId && (
+          <div className="hidden md:block w-1/2 p-4 border-l">
+            <PokemonDetails id={detailsId} onClose={closeDetails} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
