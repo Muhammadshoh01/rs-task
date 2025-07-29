@@ -3,7 +3,8 @@ import { Card } from './Card';
 import type { Pokemon } from '../types';
 import { fetchPokemonByName, fetchPokemonList } from '../api';
 import { useSearchParams } from 'react-router-dom';
-
+import { useContext } from 'react';
+import { ThemeContext } from '../context/ThemContexts';
 
 const LIMIT = 10;
 
@@ -13,41 +14,41 @@ type Props = {
 };
 
 export function CardList({ search, onCardClick }: Props) {
-
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
-  const [pokemons, setPokemons] = useState<Pokemon[]>([])
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const offset = parseInt(searchParams.get("offset") || "0", 10);
+  const offset = parseInt(searchParams.get('offset') || '0', 10);
+  const theme = useContext(ThemeContext);
 
   useEffect(() => {
     async function loadData() {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
       try {
         if (search) {
           const pokemon = await fetchPokemonByName(search);
-          setPokemons([pokemon])
-          setLoading(false)
+          setPokemons([pokemon]);
+          setLoading(false);
         } else {
           const list = await fetchPokemonList(LIMIT, offset);
           const pokemons = await Promise.all(
             list.results.map((p) => fetchPokemonByName(p.name))
           );
-          setPokemons(pokemons)
-          setLoading(false)
+          setPokemons(pokemons);
+          setLoading(false);
         }
       } catch (err: unknown) {
         if (err instanceof Error) {
-          setLoading(false)
-          setError(err.message)
+          setLoading(false);
+          setError(err.message);
         }
       }
-    };
+    }
 
-    loadData()
-  }, [search, offset])
+    loadData();
+  }, [search, offset]);
 
   function next() {
     setSearchParams({ offset: String(offset + LIMIT), search });
@@ -57,10 +58,14 @@ export function CardList({ search, onCardClick }: Props) {
   }
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center p-4">Error: {error}</div>;
+  if (error)
+    return <div className="text-red-500 text-center p-4">Error: {error}</div>;
 
   return (
-    <div data-testid="card-list" className="p-4">
+    <div
+      data-testid="card-list"
+      className={`p-4 ${theme === 'light' ? '' : 'bg-gray-900 text-white'}`}
+    >
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {pokemons.map((p) => (
           <div onClick={() => onCardClick?.(p.id)} key={p.name}>
@@ -72,14 +77,17 @@ export function CardList({ search, onCardClick }: Props) {
         <div className="flex justify-center items-center gap-4 mt-6">
           <button
             onClick={prev}
-            className="px-4 py-2 bg-gray-400 rounded"
+            className={`px-4 py-2 rounded 
+    ${theme === 'light' ? 'bg-gray-200 hover:bg-gray-300' : 'bg-gray-700 hover:bg-gray-600 text-white'}`}
           >
             Prev
           </button>
+
           <span>Offset: {offset}</span>
           <button
             onClick={next}
-            className="px-4 py-2 bg-gray-400 rounded"
+            className={`px-4 py-2 rounded 
+    ${theme === 'light' ? 'bg-gray-200 hover:bg-gray-300' : 'bg-gray-700 hover:bg-gray-600 text-white'}`}
           >
             Next
           </button>
