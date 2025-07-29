@@ -1,6 +1,7 @@
 import { it, expect, describe, vi, beforeEach, afterEach } from 'vitest';
-import type { Pokemon, PokemonListResponse } from '../types';
+import type { PokemonListResponse } from '../types';
 import { fetchPokemonByName, fetchPokemonList } from '../api';
+import { mockPokemonData } from '../api';
 
 const mockFetch = vi.fn();
 
@@ -14,31 +15,22 @@ afterEach(() => {
 
 describe('fetchPokemonByName', () => {
   it('should fetch pokemon by name', async () => {
-    const mockData: Pokemon = {
-      id: 45,
-      name: 'bulbasaur',
-      base_experience: 64,
-      sprites: {
-        front_default:
-          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
-      },
-    };
 
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockData),
+      json: () => Promise.resolve(mockPokemonData),
     } as Response);
 
-    const data = await fetchPokemonByName('bulbasaur');
+    const data = await fetchPokemonByName('pikachu');
 
-    expect(data).toEqual(mockData);
-    expect(data.name).toBe('bulbasaur');
-    expect(data.base_experience).toBe(64);
+    expect(data).toEqual(mockPokemonData);
+    expect(data.name).toBe('pikachu');
+    expect(data.base_experience).toBe(112);
     expect(data.sprites.front_default).toBeTruthy();
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://pokeapi.co/api/v2/pokemon/bulbasaur'
+      'https://pokeapi.co/api/v2/pokemon/pikachu'
     );
   });
 

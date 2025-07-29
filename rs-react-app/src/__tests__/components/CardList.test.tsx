@@ -2,21 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { CardList } from '../../components/CardList';
 import * as api from '../../api';
-import type { Pokemon, PokemonListResponse } from '../../types';
+import type { PokemonListResponse } from '../../types';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import { mockPokemonData } from '../../api';
 
 vi.mock('../../api.ts');
-
-const mockPokemon: Pokemon = {
-  id: 45,
-  name: 'bulbasaur',
-  base_experience: 64,
-  sprites: {
-    front_default:
-      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
-  },
-};
 
 describe('CardList', () => {
   const mockFetchPokemonByName =
@@ -30,7 +21,7 @@ describe('CardList', () => {
   });
 
   it('renders loading state', async () => {
-    mockFetchPokemonList.mockImplementation(() => new Promise(() => {}));
+    mockFetchPokemonList.mockImplementation(() => new Promise(() => { }));
 
     render(
       <MemoryRouter>
@@ -41,20 +32,20 @@ describe('CardList', () => {
   });
 
   it('renders a single searched Pokémon', async () => {
-    mockFetchPokemonByName.mockResolvedValueOnce(mockPokemon);
+    mockFetchPokemonByName.mockResolvedValueOnce(mockPokemonData);
 
     render(
       <MemoryRouter>
-        <CardList search="bulbasaur" />
+        <CardList search="pikachu" />
       </MemoryRouter>
     );
 
     await waitFor(() => {
       expect(screen.getByTestId('pokemon-card')).toBeInTheDocument();
-      expect(screen.getByText(/bulbasaur/i)).toBeInTheDocument();
+      expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
     });
 
-    expect(mockFetchPokemonByName).toHaveBeenCalledWith('bulbasaur');
+    expect(mockFetchPokemonByName).toHaveBeenCalledWith('pikachu');
   });
 
   it('renders paginated Pokémon list', async () => {
@@ -117,14 +108,14 @@ describe('CardList', () => {
     };
 
     mockFetchPokemonList.mockResolvedValue(mockList);
-    mockFetchPokemonByName.mockResolvedValue(mockPokemon);
+    mockFetchPokemonByName.mockResolvedValue(mockPokemonData);
 
     render(
       <MemoryRouter>
         <CardList search="" />
       </MemoryRouter>
     );
-    await waitFor(() => screen.getByText(/bulbasaur/i));
+    await waitFor(() => screen.getByText(/pikachu/i));
 
     const nextBtn = screen.getByText(/next/i);
     const user = userEvent.setup();

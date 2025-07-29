@@ -5,6 +5,7 @@ import { fetchPokemonByName, fetchPokemonList } from '../api';
 import { useSearchParams } from 'react-router-dom';
 import { useContext } from 'react';
 import { ThemeContext } from '../context/ThemContexts';
+import { usePokemonStore } from '../store/usePokemonStore';
 
 const LIMIT = 10;
 
@@ -20,6 +21,11 @@ export function CardList({ search, onCardClick }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const offset = parseInt(searchParams.get('offset') || '0', 10);
   const theme = useContext(ThemeContext);
+
+  const pokemonList = usePokemonStore((state) => state.pokemonList)
+  const removeAllPokemon = usePokemonStore((state) => state.removeAllPokemon)
+  const downloadInfo = usePokemonStore((state) => state.downloadInfo)
+
 
   useEffect(() => {
     async function loadData() {
@@ -73,6 +79,11 @@ export function CardList({ search, onCardClick }: Props) {
           </div>
         ))}
       </div>
+      {pokemonList && pokemonList.length > 0 && <div className='flex items-center justify-center gap-3 pt-3'>
+        <h2>{pokemonList.length} items are selected</h2>
+        <button onClick={removeAllPokemon} className='bg-red-500 text-white px-4 py-2 rounded'> Unselect all</button>
+        <button onClick={downloadInfo} className='bg-blue-500 text-white px-4 py-2 rounded'>Download</button>
+      </div>}
       {!search && (
         <div className="flex justify-center items-center gap-4 mt-6">
           <button

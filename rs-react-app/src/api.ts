@@ -18,3 +18,25 @@ export async function fetchPokemonByName(name: string): Promise<Pokemon> {
   if (!res.ok) throw new Error(`Pokemon not found: ${res.status}`);
   return res.json();
 }
+
+export const mockPokemonData = {
+  id: 25,
+  name: 'pikachu',
+  height: 4,
+  weight: 60,
+  base_experience: 112,
+  sprites: {
+    front_default: 'https://example.com/pikachu.png',
+  },
+  abilities: [
+    {
+      ability: { name: 'static', url: 'https://pokeapi.co/api/v2/ability/9/' },
+    },
+    {
+      ability: {
+        name: 'lightning-rod',
+        url: 'https://pokeapi.co/api/v2/ability/31/',
+      },
+    },
+  ],
+};

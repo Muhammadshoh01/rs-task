@@ -1,28 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { PokemonDetails } from '../../components/PokemonDetails';
-
-const mockPokemonData = {
-  id: 25,
-  name: 'pikachu',
-  height: 4,
-  weight: 60,
-  base_experience: 112,
-  sprites: {
-    front_default: 'https://example.com/pikachu.png',
-  },
-  abilities: [
-    {
-      ability: { name: 'static', url: 'https://pokeapi.co/api/v2/ability/9/' },
-    },
-    {
-      ability: {
-        name: 'lightning-rod',
-        url: 'https://pokeapi.co/api/v2/ability/31/',
-      },
-    },
-  ],
-};
+import { mockPokemonData } from '../../api';
 
 const mockFetch = vi.fn();
 
@@ -43,7 +22,7 @@ describe('PokemonDetails', () => {
 
     mockFetch.mockResolvedValueOnce(mockResponse);
 
-    render(<PokemonDetails id="pikachu" onClose={() => {}} />);
+    render(<PokemonDetails id="pikachu" onClose={() => { }} />);
     expect(screen.getByText(/loading details/i)).toBeInTheDocument();
   });
 
@@ -55,7 +34,7 @@ describe('PokemonDetails', () => {
 
     mockFetch.mockResolvedValueOnce(mockResponse);
 
-    render(<PokemonDetails id="pikachu" onClose={() => {}} />);
+    render(<PokemonDetails id="pikachu" onClose={() => { }} />);
 
     await screen.findByText(/pikachu/i);
 
@@ -79,7 +58,7 @@ describe('PokemonDetails', () => {
 
     mockFetch.mockResolvedValueOnce(mockResponse);
 
-    render(<PokemonDetails id="unknown" onClose={() => {}} />);
+    render(<PokemonDetails id="unknown" onClose={() => { }} />);
     await screen.findByText(/pokémon not found/i);
   });
 
