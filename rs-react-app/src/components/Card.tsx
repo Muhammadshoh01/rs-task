@@ -18,13 +18,13 @@ export function Card({ pokemon }: Props) {
   const isSelected = pokemonList.some((p) => p.id === pokemon.id);
 
   function handleCheckboxChange(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.checked)
     if (e.target.checked) {
       addPokemon(pokemon)
     } else {
       removePokemon(pokemon.id)
     }
   }
+
   return (
     <div
       data-testid="pokemon-card"
