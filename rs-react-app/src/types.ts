@@ -15,11 +15,18 @@ export type ApiResponse = {
 export type Pokemon = {
   id: number;
   name: string;
+  height: number;
+  weight: number;
+  abilities: Ability[];
   sprites: {
     front_default: string;
   };
   base_experience: number;
 };
+
+interface Ability {
+  ability: { url: string; name: string };
+}
 
 export type PokemonListResponse = {
   results: { name: string; url: string }[];
