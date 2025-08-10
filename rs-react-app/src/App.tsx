@@ -3,7 +3,7 @@ import { useSearchTerm } from './hooks/useSearchTerm';
 import { Header } from './components/Header';
 import { SearchBar } from './components/SearchBar';
 import { CardList } from './components/CardList';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import { PokemonDetails } from './components/PokemonDetails';
 import { ThemeContext } from './context/ThemContexts';
