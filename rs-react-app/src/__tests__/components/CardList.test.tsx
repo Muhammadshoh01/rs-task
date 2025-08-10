@@ -6,6 +6,7 @@ import type { PokemonListResponse } from '../../types';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { mockPokemonData } from '../../api';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 vi.mock('../../api.ts');
 
@@ -19,26 +20,31 @@ describe('CardList', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
+  function renderWithQueryClient(ui: React.ReactElement) {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+    return render(
+      <MemoryRouter>
+        <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
+      </MemoryRouter>
+    );
+  }
 
   it('renders loading state', async () => {
     mockFetchPokemonList.mockImplementation(() => new Promise(() => { }));
-
-    render(
-      <MemoryRouter>
-        <CardList search="" />
-      </MemoryRouter>
-    );
+    renderWithQueryClient(<CardList search="" />);
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
 
   it('renders a single searched Pokémon', async () => {
     mockFetchPokemonByName.mockResolvedValueOnce(mockPokemonData);
 
-    render(
-      <MemoryRouter>
-        <CardList search="pikachu" />
-      </MemoryRouter>
-    );
+    renderWithQueryClient(<CardList search="pikachu" />);
 
     await waitFor(() => {
       expect(screen.getByTestId('pokemon-card')).toBeInTheDocument();
@@ -67,11 +73,7 @@ describe('CardList', () => {
       })
     );
 
-    render(
-      <MemoryRouter>
-        <CardList search="" />
-      </MemoryRouter>
-    );
+    renderWithQueryClient(<CardList search="" />);
 
     await waitFor(() => {
       expect(screen.getByText(/bulbasaur/i)).toBeInTheDocument();
@@ -86,11 +88,7 @@ describe('CardList', () => {
       new Error('Pokemon not found: 404')
     );
 
-    render(
-      <MemoryRouter>
-        <CardList search="sukuna" />
-      </MemoryRouter>
-    );
+    renderWithQueryClient(<CardList search="sukuna" />);
 
     await waitFor(() => {
       screen.debug();
@@ -110,11 +108,7 @@ describe('CardList', () => {
     mockFetchPokemonList.mockResolvedValue(mockList);
     mockFetchPokemonByName.mockResolvedValue(mockPokemonData);
 
-    render(
-      <MemoryRouter>
-        <CardList search="" />
-      </MemoryRouter>
-    );
+    renderWithQueryClient(<CardList search="" />);
     await waitFor(() => screen.getByText(/pikachu/i));
 
     const nextBtn = screen.getByText(/next/i);
@@ -136,7 +130,7 @@ describe('CardList', () => {
     const prevBtn = screen.getByText(/prev/i);
     await user.click(prevBtn);
     await waitFor(() => {
-      expect(mockFetchPokemonList).toHaveBeenCalledTimes(3);
+      expect(mockFetchPokemonList).toHaveBeenCalledTimes(2);
     });
     expect(screen.getByText(/offset: 0/i)).toBeInTheDocument();
   });

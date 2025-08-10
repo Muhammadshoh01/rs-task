@@ -15,7 +15,6 @@ afterEach(() => {
 
 describe('fetchPokemonByName', () => {
   it('should fetch pokemon by name', async () => {
-
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockPokemonData),

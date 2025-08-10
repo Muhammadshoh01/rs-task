@@ -3,7 +3,6 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import About from '../../components/About';
 
-// Mock useNavigate
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router');
