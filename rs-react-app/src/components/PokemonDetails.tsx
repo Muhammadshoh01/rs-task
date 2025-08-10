@@ -1,18 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { ThemeContext } from '../context/ThemContexts';
-
-interface Pokemon {
-  id: number;
-  name: string;
-  height: number;
-  weight: number;
-  sprites: {
-    front_default: string;
-  };
-  base_experience: number;
-  abilities: [{ ability: { url: string; name: string } }];
-}
+import type { Pokemon } from '../types';
+import { useQuery } from '@tanstack/react-query';
 
 async function fetchPokemonByName(name: string) {
   const res = await fetch(
@@ -29,25 +18,25 @@ export function PokemonDetails({
   id: string;
   onClose: () => void;
 }) {
-  const [pokemon, setPokemon] = useState<Pokemon | null>(null);
-  const [loading, setLoading] = useState(true);
   const theme = useContext(ThemeContext);
 
-  useEffect(() => {
-    setLoading(true);
-    fetchPokemonByName(id)
-      .then((data) => setPokemon(data))
-      .catch(() => setPokemon(null))
-      .finally(() => setLoading(false));
-  }, [id]);
+  const {
+    isPending,
+    isError,
+    data: pokemon,
+    error,
+  } = useQuery<Pokemon>({
+    queryKey: ['pokemon', id],
+    queryFn: () => fetchPokemonByName(id),
+  });
 
-  if (loading) return <div>Loading details...</div>;
-  if (!pokemon) return <div>Pokémon not found.</div>;
+  if (isPending) return <div>Loading details...</div>;
+  if (isError) return <div>Error: {error.message}</div>;
+  if (!isPending && !pokemon) return <div>Pokémon not found.</div>;
 
   return (
     <div
-      className={`p-4 rounded shadow 
-  ${theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-800 text-white'}`}
+      className={`p-4 rounded shadow ${theme === 'light' ? 'bg-white text-gray-800' : 'bg-gray-800 text-white'}`}
     >
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">{pokemon.name}</h2>

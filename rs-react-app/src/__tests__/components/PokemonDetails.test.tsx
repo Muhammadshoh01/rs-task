@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { PokemonDetails } from '../../components/PokemonDetails';
 import { mockPokemonData } from '../../api';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const mockFetch = vi.fn();
 
@@ -12,6 +13,19 @@ beforeEach(() => {
 afterEach(() => {
   vi.restoreAllMocks();
 });
+function renderWithQueryClient(ui: React.ReactElement) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
+  );
+}
 
 describe('PokemonDetails', () => {
   it('shows loading initially', () => {
@@ -22,7 +36,7 @@ describe('PokemonDetails', () => {
 
     mockFetch.mockResolvedValueOnce(mockResponse);
 
-    render(<PokemonDetails id="pikachu" onClose={() => { }} />);
+    renderWithQueryClient(<PokemonDetails id="pikachu" onClose={() => {}} />);
     expect(screen.getByText(/loading details/i)).toBeInTheDocument();
   });
 
@@ -34,7 +48,7 @@ describe('PokemonDetails', () => {
 
     mockFetch.mockResolvedValueOnce(mockResponse);
 
-    render(<PokemonDetails id="pikachu" onClose={() => { }} />);
+    renderWithQueryClient(<PokemonDetails id="pikachu" onClose={() => {}} />);
 
     await screen.findByText(/pikachu/i);
 
@@ -58,8 +72,8 @@ describe('PokemonDetails', () => {
 
     mockFetch.mockResolvedValueOnce(mockResponse);
 
-    render(<PokemonDetails id="unknown" onClose={() => { }} />);
-    await screen.findByText(/pokémon not found/i);
+    renderWithQueryClient(<PokemonDetails id="unknown" onClose={() => {}} />);
+    await screen.findByText(/pokemon not found/i);
   });
 
   it('calls onClose when close button is clicked', async () => {
@@ -72,7 +86,7 @@ describe('PokemonDetails', () => {
 
     const onClose = vi.fn();
 
-    render(<PokemonDetails id="pikachu" onClose={onClose} />);
+    renderWithQueryClient(<PokemonDetails id="pikachu" onClose={onClose} />);
 
     await screen.findByText(/pikachu/i);
 
@@ -80,5 +94,20 @@ describe('PokemonDetails', () => {
     fireEvent.click(closeButton);
 
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('shows "Pokémon not found" if fetch returns null data', async () => {
+    const mockResponse = {
+      ok: true,
+      json: () => Promise.resolve(null),
+    } as Response;
+
+    mockFetch.mockResolvedValueOnce(mockResponse);
+
+    renderWithQueryClient(
+      <PokemonDetails id="missingmon" onClose={() => {}} />
+    );
+
+    expect(await screen.findByText(/pokémon not found/i)).toBeInTheDocument();
   });
 });

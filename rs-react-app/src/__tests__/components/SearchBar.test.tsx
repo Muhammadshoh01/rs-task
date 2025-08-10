@@ -2,11 +2,16 @@ import { it, expect, describe, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { SearchBar } from '../../components/SearchBar';
 import userEvent from '@testing-library/user-event';
+import { ThemeContext } from '../../context/ThemContexts';
 
 describe('Searchbar', () => {
-  function setup() {
+  function setup(theme: 'light' | 'dark' = 'light') {
     const mockOnSearch = vi.fn();
-    render(<SearchBar initialValue="pikachu" onSearch={mockOnSearch} />);
+    render(
+      <ThemeContext.Provider value={theme}>
+        <SearchBar initialValue="pikachu" onSearch={mockOnSearch} />
+      </ThemeContext.Provider>
+    );
 
     return {
       mockOnSearch,
@@ -35,5 +40,11 @@ describe('Searchbar', () => {
     waitFor(() => {
       expect(localStorage.getItem('searchTerm')).toBe('newTerm');
     });
+  });
+
+  it('should render with dark theme', () => {
+    const { input, button } = setup('dark');
+    expect(input).toHaveClass('text-white bg-gray-700 border-gray-600');
+    expect(button).toHaveClass('bg-blue-500 text-white');
   });
 });

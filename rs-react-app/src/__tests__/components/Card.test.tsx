@@ -7,7 +7,10 @@ describe('Card', () => {
   it('should render pokemon info', () => {
     render(<Card pokemon={mockPokemonData} />);
 
-    expect(screen.getByRole('img')).toHaveAttribute('alt', mockPokemonData.name);
+    expect(screen.getByRole('img')).toHaveAttribute(
+      'alt',
+      mockPokemonData.name
+    );
     expect(screen.getByRole('img')).toHaveAttribute(
       'src',
       mockPokemonData.sprites.front_default
