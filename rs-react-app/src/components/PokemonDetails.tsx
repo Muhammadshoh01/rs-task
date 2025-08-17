@@ -1,7 +1,9 @@
-import { useContext } from 'react';
-import { ThemeContext } from '../context/ThemContexts';
+
+import { useTheme } from '../context/ThemeContexts';
 import type { Pokemon } from '../types';
 import { useQuery } from '@tanstack/react-query';
+
+import Image from 'next/image';
 
 async function fetchPokemonByName(name: string) {
   const res = await fetch(
@@ -18,7 +20,7 @@ export function PokemonDetails({
   id: string;
   onClose: () => void;
 }) {
-  const theme = useContext(ThemeContext);
+  const { theme } = useTheme();
 
   const {
     isPending,
@@ -44,7 +46,7 @@ export function PokemonDetails({
           Close
         </button>
       </div>
-      <img src={pokemon.sprites.front_default} alt={pokemon.name} />
+      <Image src={pokemon.sprites.front_default} alt={pokemon.name} width={96} height={96} priority />
       <p>Height: {pokemon.height}</p>
       <p>Weight: {pokemon.weight}</p>
       <p>Base experience: {pokemon.base_experience}</p>

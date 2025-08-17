@@ -1,0 +1,26 @@
+{
+  "Header": {
+    "title": "Pokemon Explorer",
+    "Home": "Home",
+    "About": "About",
+    "toggle": "Toggle theme"
+  },
+  "About": {
+    "about": "About This Project",
+    "description": "This is a simple React project built for educational purposes. It demonstrates routing, component structure, state handling, and clean UI using Tailwind CSS.",
+    "source": "The source of the course content is available at:",
+    "createdBy": "Created by:",
+    "back": "Back"
+  },
+  "NotFound": {
+    "title": "Oops! Page not found."
+  },
+  "Card": {
+    "base_exp": "Base EXP:",
+    "choose": "Choose"
+  },
+  "SearchBar": {
+    "search": "Search",
+    "placeholder": "Search Pokémon by name"
+  }
+}
