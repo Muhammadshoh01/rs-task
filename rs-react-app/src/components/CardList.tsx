@@ -1,10 +1,9 @@
 import { Card } from './Card';
 import type { Pokemon } from '../types';
 import { fetchPokemonByName, fetchPokemonList } from '../api';
-import { useSearchParams } from 'react-router-dom';
-import { useContext } from 'react';
-import { ThemeContext } from '../context/ThemContexts';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { usePokemonStore } from '../store/usePokemonStore';
+import { useTheme } from '../context/ThemeContexts';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 const LIMIT = 10;
@@ -15,7 +14,8 @@ type Props = {
 };
 
 export function CardList({ search, onCardClick }: Props) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const offset = parseInt(searchParams.get('offset') || '0', 10);
 
   const {
@@ -43,17 +43,23 @@ export function CardList({ search, onCardClick }: Props) {
   });
   const queryClient = useQueryClient();
 
-  const theme = useContext(ThemeContext);
+  const { theme } = useTheme();
 
   const pokemonList = usePokemonStore((state) => state.pokemonList);
   const removeAllPokemon = usePokemonStore((state) => state.removeAllPokemon);
   const downloadInfo = usePokemonStore((state) => state.downloadInfo);
 
   function next() {
-    setSearchParams({ offset: String(offset + LIMIT), search });
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('offset', String(offset + LIMIT));
+    params.set('search', search);
+    router.push(`?${params.toString()}`);
   }
   function prev() {
-    setSearchParams({ offset: String(Math.max(offset - LIMIT, 0)), search });
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('offset', String(Math.max(offset - LIMIT, 0)));
+    params.set('search', search);
+    router.push(`?${params.toString()}`);
   }
   function handleRefresh() {
     queryClient.invalidateQueries({

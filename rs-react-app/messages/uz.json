@@ -1,0 +1,26 @@
+{
+  "Header": {
+    "title": "Pokémon Tadqiqotchisi",
+    "Home": "Bosh sahifa",
+    "About": "Loyiha haqida",
+    "toggle": "Mavzuni almashtirish"
+  },
+  "About": {
+    "about": "Ushbu loyiha haqida",
+    "description": "Bu ta'lim maqsadlarida qurilgan oddiy React loyihasi. U Tailwind CSS-dan foydalangan holda marshrutlash, komponentlar tuzilishi, holatni boshqarish va toza UI-ni namoyish etadi.",
+    "source": "Kurs mazmuni manbasi quyidagi manzilda mavjud:",
+    "createdBy": "Yaratgan:",
+    "back": "Orqaga"
+  },
+  "NotFound": {
+    "title": "Afsus! Sahifa topilmadi."
+  },
+  "Card": {
+    "base_exp": "Asosiy EXP:",
+    "choose": "Tanlang"
+  },
+  "SearchBar": {
+    "search": "Qidiruv",
+    "placeholder": "Pokemonni nomi bilan qidiring"
+  }
+}
