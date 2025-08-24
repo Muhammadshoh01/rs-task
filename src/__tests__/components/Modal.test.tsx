@@ -3,66 +3,67 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Modal from '../../components/Modal';
 
 describe('Modal', () => {
-    beforeEach(() => {
-        document.body.innerHTML = '';
-    });
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
 
-    it('should not render when isOpen is false', () => {
-        render(
-            <Modal isOpen={false} onClose={() => { }}>
-                <div>Content</div>
-            </Modal>
-        );
+  it('should not render when isOpen is false', () => {
+    render(
+      <Modal isOpen={false} onClose={() => {}}>
+        <div>Content</div>
+      </Modal>
+    );
 
-        expect(screen.queryByText('Content')).toBeNull();
-    });
+    expect(screen.queryByText('Content')).toBeNull();
+  });
 
-    it('should render children when isOpen is true', () => {
-        render(
-            <Modal isOpen={true} onClose={() => { }}>
-                <div>Content</div>
-            </Modal>
-        );
+  it('should render children when isOpen is true', () => {
+    render(
+      <Modal isOpen={true} onClose={() => {}}>
+        <div>Content</div>
+      </Modal>
+    );
 
-        expect(screen.getByText('Content')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Content')).toBeInTheDocument();
+  });
 
-    it('should call onClose when backdrop is clicked', () => {
-        const onClose = vi.fn();
+  it('should call onClose when backdrop is clicked', () => {
+    const onClose = vi.fn();
 
-        render(
-            <Modal isOpen={true} onClose={onClose}>
-                <div>Content</div>
-            </Modal>
-        );
+    render(
+      <Modal isOpen={true} onClose={onClose}>
+        <div>Content</div>
+      </Modal>
+    );
+    const content = screen.getByText('Content');
+    const backdrop = content.closest('[data-testid="modal-backdrop"]');
+    if (backdrop) fireEvent.click(backdrop);
+    expect(onClose).toHaveBeenCalled();
+  });
 
-        fireEvent.click(screen.getByText('Content').parentElement!.parentElement!);
-        expect(onClose).toHaveBeenCalled();
-    });
+  it('should not call onClose when modal content is clicked', () => {
+    const onClose = vi.fn();
 
-    it('should not call onClose when modal content is clicked', () => {
-        const onClose = vi.fn();
+    render(
+      <Modal isOpen={true} onClose={onClose}>
+        <div>Content</div>
+      </Modal>
+    );
 
-        render(
-            <Modal isOpen={true} onClose={onClose}>
-                <div>Content</div>
-            </Modal>
-        );
+    fireEvent.click(screen.getByText('Content'));
+    expect(onClose).not.toHaveBeenCalled();
+  });
 
-        fireEvent.click(screen.getByText('Content'));
-        expect(onClose).not.toHaveBeenCalled();
-    });
+  it('should call onClose when Escape key is pressed', () => {
+    const onClose = vi.fn();
 
-    it('should call onClose when Escape key is pressed', () => {
-        const onClose = vi.fn();
+    render(
+      <Modal isOpen={true} onClose={onClose}>
+        <div>Content</div>
+      </Modal>
+    );
 
-        render(
-            <Modal isOpen={true} onClose={onClose}>
-                <div>Content</div>
-            </Modal>
-        );
-
-        fireEvent.keyDown(document, { key: 'Escape' });
-        expect(onClose).toHaveBeenCalled();
-    });
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalled();
+  });
 });

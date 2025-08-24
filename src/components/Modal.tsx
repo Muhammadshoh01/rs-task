@@ -30,7 +30,9 @@ function Modal({ isOpen, onClose, children }: ModalProps) {
       onClick={onClose}
       data-testid="modal-backdrop"
     >
-      <div onClick={(e) => e.stopPropagation()} role="dialog">{children}</div>
+      <div onClick={(e) => e.stopPropagation()} role="dialog">
+        {children}
+      </div>
     </div>,
     document.body
   );

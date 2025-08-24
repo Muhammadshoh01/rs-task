@@ -16,7 +16,7 @@ function App() {
 
   useEffect(() => {
     setCountries(countries);
-  }, []);
+  }, [setCountries]);
 
   return (
     <>
